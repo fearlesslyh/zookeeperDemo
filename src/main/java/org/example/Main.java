@@ -1,6 +1,7 @@
 package org.example;
 
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.Watcher;
 import org.apache.zookeeper.ZooDefs;
 import org.apache.zookeeper.ZooKeeper;
 
@@ -18,7 +19,9 @@ public class Main {
     public static void main(String[] args) throws Exception {
         // 1. 连接ZooKeeper服务端
         zk = new ZooKeeper(ZK_ADDRESS, SESSION_TIMEOUT, event -> {
-            System.out.println("事件触发：" + event.getType());
+            if (event.getType()== Watcher.Event.EventType.NodeDataChanged){
+                System.out.println("配置已更新，重新加载配置");
+            }
         });
         System.out.println("连接状态：" + zk.getState());
 
